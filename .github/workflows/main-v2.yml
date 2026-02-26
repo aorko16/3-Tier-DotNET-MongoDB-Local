@@ -1,0 +1,43 @@
+name: .NET Fullstack CI/CD-v2
+
+# Trigger workflow on push or pull request to the main branch
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest   # Use latest Ubuntu runner for CI
+
+    steps:
+      # -------------------- Step 1: Checkout --------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # This step pulls your code from GitHub into the runner
+
+      # -------------------- Step 2: Setup .NET --------------------
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+        # Installs the specified version of .NET SDK (8.0 LTS in 2026)
+
+      # -------------------- Step 3: Restore Dependencies --------------------
+      - name: Restore dependencies
+        run: dotnet restore DotNetMongoCRUDApp.csproj
+        # Restores NuGet packages required by the project
+
+      # -------------------- Step 4: Build Project --------------------
+      - name: Build project
+        run: dotnet build DotNetMongoCRUDApp.csproj --configuration Release
+        # Compiles the project in Release mode
+
+      # -------------------- Step 5: Run Tests --------------------
+      - name: Run tests
+        run: dotnet test DotNetMongoCRUDApp.csproj --configuration Release --verbosity normal
+        # Runs all unit tests in the project
+        # --verbosity normal gives readable output in CI logs
+
+      
