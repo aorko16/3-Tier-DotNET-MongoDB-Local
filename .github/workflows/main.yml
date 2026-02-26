@@ -1,0 +1,32 @@
+name: .NET Fullstack CI/CD-v1
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore DotNetMongoCRUDApp.csproj
+
+      - name: Build project
+        run: dotnet build DotNetMongoCRUDApp.csproj --configuration Release
+
+      - name: Run tests
+        run: dotnet test DotNetMongoCRUDApp.csproj --configuration Release --verbosity normal
+
+      - name: Publish project
+        run: dotnet publish DotNetMongoCRUDApp.csproj --configuration Release --output ./publish
