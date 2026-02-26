@@ -1,0 +1,42 @@
+name: .NET Fullstack CI/CD--V3
+
+# Trigger workflow on push or pull request to the main branch
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest   # Use latest Ubuntu runner for CI
+
+    steps:
+      # -------------------- Step 1: Checkout --------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Pulls your code from GitHub
+
+      # -------------------- Step 2: Setup .NET --------------------
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+        # Installs .NET SDK version 8.0 LTS
+
+      # -------------------- Step 3: Restore Dependencies --------------------
+      - name: Restore dependencies
+        run: dotnet restore
+        # Automatically finds your .csproj file(s) and restores packages
+
+      # -------------------- Step 4: Build Project --------------------
+      - name: Build project
+        run: dotnet build
+        # Builds all projects in Debug mode by default
+
+      # -------------------- Step 5: Run Tests --------------------
+      - name: Run tests
+        run: dotnet test
+        # Automatically finds all test projects and runs them
+        # Default build configuration is Debug
+
